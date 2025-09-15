@@ -52,6 +52,11 @@ MultiLayerPerceptron::MultiLayerPerceptron(std::vector<size_t> layers, double bi
 void MultiLayerPerceptron::set_weights(std::vector<std::vector<std::vector<double> > > w_init) {
     // Write all the weights into the neural network.
     // w_init is a vector of vectors of vectors of doubles. 
+    for (auto i = 0; i <= w_init.size(); i++){
+        for (auto j = 0; j <= w_init[i].size(); j++){
+                network[i+1][j].set_weights(w_init[i][j]);
+        }
+    }
 }
 
 void MultiLayerPerceptron::print_weights() {
@@ -70,5 +75,11 @@ void MultiLayerPerceptron::print_weights() {
 std::vector<double> MultiLayerPerceptron::run(std::vector<double> x) {
     // Run an input forward through the neural network.
     // x is a vector with the input values.
+   values[0] = x;
+    for (auto i = 1; i <= network.size(); i++){
+        for (auto j = 0; j < layers[i]; j++){
+            values[i][j] = network[i][j].run(values[i - 1]);
+        }
+    }
     return values.back();
 }
